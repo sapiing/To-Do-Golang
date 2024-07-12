@@ -1,32 +1,32 @@
 package middleware
 
 import (
-    "net/http"
+	"net/http"
+	"strings"
 
-    "backend/auth"
+	"backend/auth"
+	"backend/error"
 )
 
 // Middleware untuk otentikasi
 func AuthMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        // ambil token dari header
         authHeader := r.Header.Get("Authorization")
         if authHeader == "" {
-            http.Error(w, "Authorization header is missing", http.StatusUnauthorized)
+            error.HandleError(w, http.StatusUnauthorized, "Authorization header missing", nil)
             return
         }
 
-        // pisahin token dari prefix bearer
-        tokenString := authHeader[len("Bearer "):]
+        tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-        // validasi token
+        // Validasi token
         _, err := auth.ValidationToken(tokenString)
         if err != nil {
-            http.Error(w, "Invalid token", http.StatusUnauthorized)
+            error.HandleError(w, http.StatusUnauthorized, "Invalid token", err)
             return
         }
 
-        // token valid, lanjut ke header selanjutnya
+        // Token valid, lanjutkan ke handler berikutnya
         next.ServeHTTP(w, r)
     })
 }

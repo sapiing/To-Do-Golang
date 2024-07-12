@@ -33,4 +33,4 @@ nanti tinggak send, harusnya dia return token
 
 buat api yang lain, itu karena hanya bisa di akses pake token, kamu harus pake Headers di postmannya, ada di jajaran yang sama kayak Body, kamu masuk ke Headers, kalo udah tinggal tambahin key -- Authorization --, terus valuenya pake format -- Bearer kodetokenmu --. 
 
-
+aku encok, lanjut nanti kalo niat
